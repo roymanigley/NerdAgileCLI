@@ -1,0 +1,12 @@
+version: '3.1'
+
+services:
+  nerd_agile_cli_db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: nerdagilecli_pass
+      POSTGRES_USER: nerdagilecli_user
+      POSTGRES_DB: nerdagilecli
+    ports:
+      - 5432:5432
