@@ -5,6 +5,7 @@ django-ninja==0.21.0
 markdown-it-py==2.2.0
 mdurl==0.1.2
 psycopg2-binary==2.9.6
+pycryptodome==3.18.0
 pydantic==1.10.7
 Pygments==2.15.1
 rich==13.3.5

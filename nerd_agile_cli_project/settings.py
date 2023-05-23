@@ -13,6 +13,19 @@ import os
 from pathlib import Path
 from time import sleep
 
+from Crypto.PublicKey import RSA
+
+rsa_private_key_path = os.environ.get('RSA_PRIVATE_KEY') or 'rsa_private.pem'
+rsa_public_key_path = os.environ.get('RSA_PUBLIC_KEY') or 'rsa_public.pem'
+
+if not os.path.exists(rsa_private_key_path) or not os.path.exists(rsa_public_key_path):
+    print('[+] generating RSA keys')
+    keys = RSA.generate(4096)
+    with open(rsa_private_key_path, 'w') as f:
+        f.write(keys.exportKey('PEM', pkcs=1).decode('utf-8'))
+    with open(rsa_public_key_path, 'w') as f:
+        f.write(keys.publickey().exportKey('PEM', pkcs=1).decode('utf-8'))
+
 PROD = os.getenv("APP_PROD_ENV") is not None and os.getenv("APP_PROD_ENV").upper() == 'TRUE'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = not PROD or (os.getenv("APP_DEBUG") is not None and os.getenv("APP_DEBUG").upper() == 'TRUE')

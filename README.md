@@ -13,7 +13,7 @@
 ### API
 - [x] CRUD endpoints for all models
 - [x] add a `PATCH` endpoint for every model
-- [ ] make the Bearer token more secure
+- [x] make the Bearer token more secure
 
 ## Run REST API application
 
