@@ -1,5 +1,6 @@
-from typing import Optional
+from typing import Optional, List
 
+from django.db.models.query import QuerySet
 from ninja import Schema
 from datetime import date, datetime
 
@@ -172,3 +173,8 @@ class CommentSchemaOut(Schema):
     creator: str
     create_date: datetime
     task: TaskSchemaOut
+
+
+class SprintSchemaOutWithTask(Schema):
+    sprint: SprintSchemaOut
+    tasks: List[TaskSchemaOut]

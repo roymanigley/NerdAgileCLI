@@ -1,3 +1,5 @@
+from urllib.error import HTTPError
+
 import click
 
 from commands.project_commands import project_commands
@@ -9,16 +11,24 @@ from commands.sub_task_commands import sub_task_commands
 from commands.comment_commands import comment_commands
 
 if __name__ == '__main__':
-    commands = click.CommandCollection(sources=[
-        project_commands,
-        epic_commands,
-        feature_commands,
-        sprint_commands,
-        task_commands,
-        sub_task_commands,
-        comment_commands
-    ])
-    commands()
+    try:
+        commands = click.CommandCollection(sources=[
+            project_commands,
+            epic_commands,
+            feature_commands,
+            sprint_commands,
+            task_commands,
+            sub_task_commands,
+            comment_commands
+        ])
+        commands()
+    except HTTPError as e:
+        message = e.read().decode('utf-8')
+        print(f'[!] {message}')
+    # except Exception as e:
+    #     print(f'[!] {e}')
+
+
     # CREATE PROJECT
     # LIST PROJECTS (show epics and features)
     # UPDATE PROJECT (change name)

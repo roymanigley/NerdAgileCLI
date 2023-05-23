@@ -5,7 +5,7 @@ import click
 from client.SprintClient import client
 from model import Sprint, ClassMapper
 
-from printer import print_sprint
+from printer import print_sprint, print_sprint_with_task
 
 
 @click.group()
@@ -19,7 +19,7 @@ def sprint_commands() -> None:
 @click.option('--end', prompt='Enter the end date for the "sprint"', help='The end date of the "sprint"', type=click.DateTime(formats=["%Y-%m-%d"]))
 @click.option('--project_id', prompt='Enter the project_id for the "sprint"', help='The project_id of the "sprint"', type=int)
 @click.option('--goal', help='The goal of the "sprint"', type=str)
-def update(name: str, goal: str, start: date, end: date, project_id: int) -> None:
+def new(name: str, goal: str, start: date, end: date, project_id: int) -> None:
     sprint = client.create(Sprint(name, goal, start, end, project_id))
     print_sprint(sprint)
 
@@ -32,7 +32,7 @@ def show(id: int) -> None:
         [print_sprint(p) for p in sprints]
     else:
         sprint = client.find_one(id)
-        print_sprint(sprint)
+        print_sprint_with_task(sprint)
 
 
 @sprint_commands.command('sprint:update')

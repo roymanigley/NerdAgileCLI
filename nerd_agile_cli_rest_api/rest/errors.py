@@ -18,6 +18,6 @@ def register(api: NinjaAPI):
         return api.create_response(request, {"status": "error", "detail": str(e)}, status=500)
 
     @api.exception_handler(Exception)
-    def handle_integrity_error(request: HttpRequest, e: Exception):
+    def handle_general_error(request: HttpRequest, e: Exception):
         print(e)
         return api.create_response(request, {"status": "error", "detail": str(e)}, status=500)

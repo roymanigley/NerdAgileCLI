@@ -7,8 +7,11 @@
 
 - [x] CRUD for all models
 - [x] add `PATCH` command to only update single fields
-- [ ] when invoking `sprint:show --id 1` display a Kanban board 
-- [ ] add error handling to show a nice output to the user (stacktrace only when DEBUG is set to true)
+- [x] when invoking `sprint:show --id 1` display a Kanban board 
+- [x] add error handling to show a nice output to the user
+- [ ] stype the output from the client
+  - [ ] find all in tables
+  - [ ] single records in a nicer fashion
 
 ### API
 - [x] CRUD endpoints for all models

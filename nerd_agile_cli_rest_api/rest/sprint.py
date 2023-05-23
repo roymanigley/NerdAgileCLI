@@ -5,8 +5,9 @@ from django.shortcuts import get_object_or_404
 from ninja import NinjaAPI
 
 from nerd_agile_cli_rest_api.rest.auth import AuthBearer
-from nerd_agile_cli_rest_api.models import Sprint
-from nerd_agile_cli_rest_api.schemas import SprintSchemaOut, SprintSchemaIn, SprintSchemaInPatch
+from nerd_agile_cli_rest_api.models import Sprint, Task
+from nerd_agile_cli_rest_api.schemas import SprintSchemaOut, SprintSchemaIn, SprintSchemaInPatch, \
+    SprintSchemaOutWithTask
 from nerd_agile_cli_rest_api.rest.helper import apply_autit_create_infos
 
 
@@ -15,9 +16,11 @@ def register(api: NinjaAPI) -> None:
     def get_sprints(request: HttpRequest):
         return Sprint.objects.all()
 
-    @api.get("sprint/{id}", response={200: SprintSchemaOut}, auth=AuthBearer())
+    @api.get("sprint/{id}", response={200: SprintSchemaOutWithTask}, auth=AuthBearer())
     def get_sprint_by_id(request: HttpRequest, id: int):
-        return get_object_or_404(Sprint, id=id)
+        sprint = get_object_or_404(Sprint, id=id)
+        tasks = Task.objects.filter(sprint_id=id).all()
+        return {"sprint": sprint, "tasks": list(tasks)}
 
     @api.post("sprint", response={201: SprintSchemaOut}, auth=AuthBearer())
     def create_sprint(request: HttpRequest, payload: SprintSchemaIn):

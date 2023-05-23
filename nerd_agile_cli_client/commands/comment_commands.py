@@ -14,9 +14,9 @@ def comment_commands() -> None:
 
 
 @comment_commands.command('comment:new')
-@click.option('--content', prompt='Enter the description for the "comment"', help='The description of the "comment"', type=str)
 @click.option('--task_id', prompt='Enter the task_id for the "comment"', help='The task_id of the "comment"', type=int)
-def update(content: str, task_id: int) -> None:
+def create(task_id: int) -> None:
+    content = click.edit()
     comment = client.create(Comment(content, task_id))
     print_comment(comment)
 
@@ -34,9 +34,9 @@ def show(id: int) -> None:
 
 @comment_commands.command('comment:update')
 @click.option('--id', prompt='Enter the "comment" id', help='The id of the "comment"', type=str)
-@click.option('--content', help='The description of the "comment"', type=str)
 @click.option('--task_id', help='The task_id of the "comment"', type=int)
-def update(id: int, content: str, task_id: int) -> None:
+def update(id: int, task_id: int) -> None:
+    content = click.edit(client.find_one(id).content)
     comment = client.update_partial(Comment(content, task_id), id)
     print_comment(comment)
 

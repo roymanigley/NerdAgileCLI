@@ -65,8 +65,8 @@ class Sprint(object):
         self.id: int
         self.name: str = name
         self.goal: str = goal
-        self.start: date = start.isoformat()[:10]
-        self.end: date = end.isoformat()[:10]
+        self.start: date = start.isoformat()[:10] if start is not None else None
+        self.end: date = end.isoformat()[:10] if end is not None else None
         self.creator: str
         self.create_date: datetime
         self.project: Project

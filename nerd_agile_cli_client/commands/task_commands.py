@@ -15,7 +15,6 @@ def task_commands() -> None:
 
 @task_commands.command('task:new')
 @click.option('--name', prompt='Enter the "task" name', help='The name of the "task"', type=str)
-@click.option('--description', prompt='Enter the description for the "task"', help='The description of the "task"', type=str)
 @click.option('--tags', help='The tags of the "task"', type=str)
 @click.option('--type', prompt='Enter the task type date for the "task"', help='The task type of the "task"', type=click.Choice([e.value for e in TaskType]))
 @click.option('--status', help='The status of the "task"', type=click.Choice([e.value for e in Status]))
@@ -24,8 +23,9 @@ def task_commands() -> None:
 @click.option('--assignee', help='The assignee of the "task"', type=str)
 @click.option('--sprint_id', help='The sprint_id of the "task"', type=int)
 @click.option('--feature_id', help='The feature_id of the "task"', type=int)
-def update(name: str, description: str, type: TaskType, status: Status, tags: str,
+def new(name: str, type: TaskType, status: Status, tags: str,
            estimation: int, sprint_order: int, assignee: str, sprint_id: int, feature_id: int) -> None:
+    description = click.edit()
     task = client.create(Task(name, description, type, status, tags, estimation, sprint_order, assignee,
                               sprint_id, feature_id))
     print_task(task)
@@ -45,7 +45,6 @@ def show(id: int) -> None:
 @task_commands.command('task:update')
 @click.option('--id', prompt='Enter the "task" id', help='The id of the "task"', type=str)
 @click.option('--name', help='The name of the "task"', type=str)
-@click.option('--description', help='The description of the "task"', type=str)
 @click.option('--tags', help='The tags of the "task"', type=str)
 @click.option('--type', help='The task type of the "task"', type=click.Choice([e.value for e in TaskType]))
 @click.option('--status', help='The status of the "task"', type=click.Choice([e.value for e in Status]))
@@ -54,8 +53,9 @@ def show(id: int) -> None:
 @click.option('--assignee', help='The assignee of the "task"', type=str)
 @click.option('--sprint_id', help='The sprint_id of the "task"', type=int)
 @click.option('--feature_id', help='The feature_id of the "task"', type=int)
-def update(id: int, name: str, description: str, type: TaskType, status: Status, tags: str,
+def update(id: int, name: str, type: TaskType, status: Status, tags: str,
                  estimation: int, sprint_order: int, assignee: str, sprint_id: int, feature_id: int) -> None:
+    description = click.edit(client.find_one(id).description)
     task = client.update_partial(Task(name, description, type, status, tags, estimation, sprint_order, assignee,
                                       sprint_id, feature_id), id)
     print_task(task)

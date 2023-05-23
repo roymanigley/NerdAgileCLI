@@ -1,6 +1,9 @@
-from model import Project, Epic, Feature, Sprint, Task, SubTask, Comment
+from itertools import zip_longest
+
+from model import Project, Epic, Feature, Sprint, Task, SubTask, Comment, Status, TaskType
 from rich.markdown import Markdown
 from rich.console import Console
+from rich.table import Table
 
 console = Console()
 
@@ -67,7 +70,10 @@ def print_task(task: Task):
     md = Markdown(f'''# Task: {task.name}
 - id          : {task.id}
 - name        : {task.name}
-- description : {task.description}
+- description : 
+```
+{task.description}
+```
 - type        : {task.task_type}
 - status      : {task.task_status}
 - tags        : {task.tags}
@@ -90,7 +96,10 @@ def print_sub_task(sub_task: SubTask):
     md = Markdown(f'''# Sub-Task: {sub_task.name}
 - id          : {sub_task.id}
 - name        : {sub_task.name}
-- description : {sub_task.description}
+- description : 
+```
+{sub_task.description}
+```
 - task 
     - name     : {sub_task.task["name"]}
     - id       : {sub_task.task["id"]}
@@ -104,7 +113,10 @@ def print_sub_task(sub_task: SubTask):
 def print_comment(comment: Comment):
     md = Markdown(f'''# Comment for Task: {comment.task["name"]} (id: {comment.task["id"]})
 - id          : {comment.id}
-- description : {comment.content}
+- content : 
+```
+{comment.content}
+```
 - task 
     - name     : {comment.task["name"]}
     - id       : {comment.task["id"]}
@@ -113,3 +125,46 @@ def print_comment(comment: Comment):
 ---
     ''')
     console.print(md)
+
+
+def to_table_data(task):
+    data = ''
+    if task is not None:
+        if task["task_type"] == TaskType.BUG.value:
+            data += '🐛'
+        if task["task_type"] == TaskType.STORY.value:
+            data += '💫'
+        if task["task_type"] == TaskType.DEVOPS.value:
+            data += '👷'
+        data += f' [{task["id"]:>3}] [bold]@{task["assignee"]} {task["name"]}[/bold]\n         {task["task_status"]}'
+    return data
+
+
+def print_sprint_with_task(sprintWithTask):
+
+
+    md = Markdown(f'''# Sprint: {sprintWithTask.sprint["name"]} [{sprintWithTask.sprint["project"]["name"]}]
+    ''')
+    notStartedTasks = list(filter(lambda task: task["task_status"] in [Status.IN_PLANNING.value, Status.PLANNED.value], sprintWithTask.tasks))
+    runningTasks = list(filter(lambda task: task["task_status"] in [Status.IN_PROGRESS.value, Status.BLOCKED.value], sprintWithTask.tasks))
+    checkingTasks = list(filter(lambda task: task["task_status"] in [Status.CHECKING.value], sprintWithTask.tasks))
+
+    closedTasks = list(filter(lambda task: task["task_status"] in [Status.RESOLVED.value, Status.WONT_RESOLVE.value], sprintWithTask.tasks))
+    table = Table(title=f'🥅 {sprintWithTask.sprint["goal"]} {sprintWithTask.sprint["start"]} - {sprintWithTask.sprint["end"]}', expand=True)
+    table.add_column("📋 Not started")
+    table.add_column("🏃 In progress")
+    table.add_column("📊 In checking")
+
+    table.add_column("[green]✔[/green] Closed")
+
+
+    for notStartedTask, runningTask, checkingTask, closedTask in list(zip_longest(notStartedTasks, runningTasks, checkingTasks, closedTasks)):
+        table.add_row(
+            to_table_data(notStartedTask),
+            to_table_data(runningTask),
+            to_table_data(checkingTask),
+            to_table_data(closedTask)
+        )
+
+    console.print(md)
+    console.print(table)
