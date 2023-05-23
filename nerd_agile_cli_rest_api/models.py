@@ -32,7 +32,7 @@ class Project(models.Model):
 
 class Epic(models.Model):
     name = models.CharField(max_length=255, blank=False)
-    tags = models.CharField(max_length=1024, blank=True)
+    tags = models.CharField(max_length=1024, blank=False, null=True)
     creator = models.CharField(max_length=255, blank=False)
     create_date = models.DateTimeField(blank=False)
     project = models.ForeignKey(Project, on_delete=models.DO_NOTHING, blank=False)
@@ -43,18 +43,18 @@ class Feature(models.Model):
     priority = models.CharField(blank=False, choices=FeaturePriority.choices)
     creator = models.CharField(max_length=255, blank=False)
     create_date = models.DateTimeField(blank=False)
-    tags = models.CharField(max_length=1024, blank=True)
+    tags = models.CharField(max_length=1024, blank=False, null=True)
     epic = models.ForeignKey(Epic, on_delete=models.DO_NOTHING, blank=False)
 
 
 class Sprint(models.Model):
     name = models.CharField(max_length=255, blank=False)
-    goal = models.CharField(max_length=255, blank=True)
+    goal = models.CharField(max_length=255, blank=False, null=True)
     start = models.DateField(blank=False)
     end = models.DateField(blank=False)
     creator = models.CharField(max_length=255, blank=False)
     create_date = models.DateTimeField(blank=False)
-    project = models.ForeignKey(Project, on_delete=models.DO_NOTHING)
+    project = models.ForeignKey(Project, on_delete=models.DO_NOTHING, blank=False)
 
 
 class Task(models.Model):
@@ -62,14 +62,14 @@ class Task(models.Model):
     description = models.TextField(blank=False)
     task_type = models.CharField(blank=False, default=TaskType.choices)
     task_status = models.CharField(blank=False, default=Status.IN_PLANNING, choices=Status.choices)
-    tags = models.CharField(max_length=1024, blank=True)
-    estimation = models.IntegerField(blank=True, default=9999)
-    sprint_order = models.IntegerField(blank=True, default=9999)
+    tags = models.CharField(max_length=1024, blank=False, null=True)
+    estimation = models.IntegerField(null=True)
+    sprint_order = models.IntegerField(null=True)
     creator = models.CharField(max_length=255, blank=False)
     create_date = models.DateTimeField(blank=False)
-    assignee = models.CharField(max_length=255, blank=True)
-    sprint = models.ForeignKey(Sprint, on_delete=models.DO_NOTHING, blank=True)
-    feature = models.ForeignKey(Feature, on_delete=models.DO_NOTHING, blank=True)
+    assignee = models.CharField(max_length=255, blank=True, null=True)
+    sprint = models.ForeignKey(Sprint, on_delete=models.DO_NOTHING, null=True)
+    feature = models.ForeignKey(Feature, on_delete=models.DO_NOTHING, null=True)
 
 
 class SubTask(models.Model):

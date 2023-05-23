@@ -71,12 +71,12 @@ class GenericClient(Generic[T]):
         record: List = json.loads(json_bytes)
         return ClassMapper(record).to_class()
 
-    def update(self, payload: T, id: int) -> T:
+    def update_partial(self, payload: T, id: int) -> T:
         token = self.get_token(self.username, self.password)
         json_string: str = json.dumps(payload.__dict__)
         req = Request(
             f'{self.base_url}{self.resource_url}/{id}',
-            method='PUT',
+            method='PATCH',
             data=json_string.encode('utf-8'),
             headers={
                 'Content-Type': 'application/json',

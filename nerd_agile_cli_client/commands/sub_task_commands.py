@@ -35,11 +35,11 @@ def show(id: int) -> None:
 
 @sub_task_commands.command('sub_task:update')
 @click.option('--id', prompt='Enter the "sub_task" id', help='The id of the "sub_task"', type=str)
-@click.option('--name', prompt='Enter the "sub_task" name', help='The name of the "sub_task"', type=str)
-@click.option('--description', prompt='Enter the description for the "sub_task"', help='The description of the "sub_task"', type=str)
-@click.option('--task_id', prompt='Enter the feature_id for the "sub_task"', help='The feature_id of the "sub_task"', type=int)
+@click.option('--name', help='The name of the "sub_task"', type=str)
+@click.option('--description', help='The description of the "sub_task"', type=str)
+@click.option('--task_id', help='The feature_id of the "sub_task"', type=int)
 def update(id: int, name: str, description: str, task_id: int) -> None:
-    sub_task = client.update(SubTask(name, description, task_id), id)
+    sub_task = client.update_partial(SubTask(name, description, task_id), id)
     print_sub_task(sub_task)
 
 

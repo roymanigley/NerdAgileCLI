@@ -13,9 +13,9 @@ def feature_commands() -> None:
 
 @feature_commands.command('feature:new')
 @click.option('--name', prompt='Enter the "feature" name', help='The name of the "feature"', type=str)
-@click.option('--tags', prompt='Enter the tags for the "feature"', help='The tags of the "feature"', type=str)
 @click.option('--priority', prompt='Enter the priority for the "feature"', help='The priority of the "feature"', type=click.Choice([e.value for e in FeaturePriority]))
 @click.option('--epic_id', prompt='Enter the epic_id for the "feature"', help='The epic_id of the "feature"', type=int)
+@click.option('--tags', help='The tags of the "feature"', type=str)
 def new(name: str, tags: str, priority: str, epic_id: int) -> None:
     feature = client.create(Feature(name, tags, priority, epic_id))
     print_feature(feature)
@@ -34,11 +34,11 @@ def show(id: int) -> None:
 
 @feature_commands.command('feature:update')
 @click.option('--id', prompt='Enter the "feature" id', help='The id of the "feature"', type=str)
-@click.option('--name', prompt='Enter the "feature" name', help='The name of the "feature"', type=str)
-@click.option('--tags', prompt='Enter the "ags for the "feature"', help='The tags of the "feature"', type=str)
-@click.option('--epic_id', prompt='Enter the epic_id for the "feature"', help='The epic_id of the "feature"', type=int)
+@click.option('--name', help='The name of the "feature"', type=str)
+@click.option('--epic_id', help='The epic_id of the "feature"', type=int)
+@click.option('--tags', help='The tags of the "feature"', type=str)
 def update(id: int, name: str, tags: str, epic_id: int) -> None:
-    feature = client.update(Feature(name, tags, epic_id), id)
+    feature = client.update_partial(Feature(name, tags, epic_id), id)
     print_feature(feature)
 
 

@@ -7,7 +7,7 @@ from ninja import NinjaAPI
 from nerd_agile_cli_rest_api.rest.auth import AuthBearer
 from nerd_agile_cli_rest_api.models import Comment
 from nerd_agile_cli_rest_api.rest.helper import apply_autit_create_infos
-from nerd_agile_cli_rest_api.schemas import CommentSchemaIn, CommentSchemaOut
+from nerd_agile_cli_rest_api.schemas import CommentSchemaIn, CommentSchemaOut, CommentSchemaInPatch
 
 
 def register(api: NinjaAPI) -> None:
@@ -30,8 +30,16 @@ def register(api: NinjaAPI) -> None:
     def update_comment(request: HttpRequest, id: int, payload: CommentSchemaIn):
         comment = get_object_or_404(Comment, id=id)
         for attr, value in payload.dict().items():
-            if attr != "id":
-                setattr(comment, attr, value)
+            setattr(comment, attr, value)
+        comment.save()
+        return comment
+
+    @api.patch("comment/{id}", response={200: CommentSchemaOut}, auth=AuthBearer())
+    def update_partial_comment(request: HttpRequest, id: int, payload: CommentSchemaInPatch):
+        comment = get_object_or_404(Comment, id=id)
+        for attr, value in payload.dict().items():
+            if value is not None:
+                setattr(comment, attr, value if value != 'null' else None)
         comment.save()
         return comment
 

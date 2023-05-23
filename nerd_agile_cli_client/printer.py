@@ -74,11 +74,11 @@ def print_task(task: Task):
 - estimation  : {task.estimation}
 - sprint order: {task.sprint_order}
 - sprint 
-    - name     : {task.sprint["name"]}
-    - id       : {task.sprint["id"]}
+    - name     : {task.sprint["name"] if task.sprint is not None else None}
+    - id       : {task.sprint["id"] if task.sprint is not None else None}
 - feature 
-    - name     : {task.feature["name"]}
-    - id       : {task.feature["id"]}
+    - name     : {task.feature["name"] if task.feature is not None else None}
+    - id       : {task.feature["id"] if task.feature is not None else None}
 - creator     : {task.creator}
 - create_date : {task.create_date}
 ---

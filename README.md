@@ -6,13 +6,13 @@
 ### CLI
 
 - [x] CRUD for all models
-- [ ] add `PATCH` command to only update single fields
+- [x] add `PATCH` command to only update single fields
 - [ ] when invoking `sprint:show --id 1` display a Kanban board 
 - [ ] add error handling to show a nice output to the user (stacktrace only when DEBUG is set to true)
 
 ### API
 - [x] CRUD endpoints for all models
-- [ ] add a `PATCH` endpoint for every model
+- [x] add a `PATCH` endpoint for every model
 - [ ] make the Bearer token more secure
 
 ## Run REST API application

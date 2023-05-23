@@ -6,7 +6,7 @@ from ninja import NinjaAPI
 
 from nerd_agile_cli_rest_api.rest.auth import AuthBearer
 from nerd_agile_cli_rest_api.models import Project
-from nerd_agile_cli_rest_api.schemas import ProjectSchemaOut, ProjectSchemaIn
+from nerd_agile_cli_rest_api.schemas import ProjectSchemaOut, ProjectSchemaIn, ProjectSchemaInPatch
 from nerd_agile_cli_rest_api.rest.helper import apply_autit_create_infos
 
 
@@ -30,8 +30,16 @@ def register(api: NinjaAPI) -> None:
     def update_project(request: HttpRequest, id: int, payload: ProjectSchemaIn):
         project = get_object_or_404(Project, id=id)
         for attr, value in payload.dict().items():
-            if attr != "id":
-                setattr(project, attr, value)
+            setattr(project, attr, value)
+        project.save()
+        return project
+
+    @api.patch("project/{id}", response={200: ProjectSchemaOut}, auth=AuthBearer())
+    def update_partial_project(request: HttpRequest, id: int, payload: ProjectSchemaInPatch):
+        project = get_object_or_404(Project, id=id)
+        for attr, value in payload.dict().items():
+            if value is not None:
+                setattr(project, attr, value if value != 'null' else None)
         project.save()
         return project
 

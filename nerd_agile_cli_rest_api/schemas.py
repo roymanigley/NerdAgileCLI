@@ -1,3 +1,5 @@
+from typing import Optional
+
 from ninja import Schema
 from datetime import date, datetime
 
@@ -8,8 +10,12 @@ class ProjectSchemaIn(Schema):
     name: str
 
 
+class ProjectSchemaInPatch(Schema):
+    name: Optional[str]
+
+
 class ProjectSchemaOut(Schema):
-    id: int = None
+    id: int
     name: str
     creator: str
     create_date: datetime
@@ -17,107 +23,152 @@ class ProjectSchemaOut(Schema):
 
 class EpicSchemaIn(Schema):
     name: str
-    tags: str
-    project_id: int = None
+    tags: Optional[str]
+    project_id: int
+
+
+class EpicSchemaInPatch(Schema):
+    name: Optional[str]
+    tags: Optional[str]
+    project_id: Optional[int]
 
 
 class EpicSchemaOut(Schema):
-    id: int = None
+    id: int
     name: str
-    tags: str
+    tags: Optional[str]
     creator: str
     create_date: datetime
-    project: ProjectSchemaOut = None
+    project: ProjectSchemaOut
 
 
 class FeatureSchemaIn(Schema):
     name: str
     priority: FeaturePriority
-    tags: str
-    epic_id: int = None
+    tags: Optional[str]
+    epic_id: int
+
+
+class FeatureSchemaInPatch(Schema):
+    name: Optional[str]
+    priority: Optional[FeaturePriority]
+    tags: Optional[str]
+    epic_id: Optional[int]
 
 
 class FeatureSchemaOut(Schema):
-    id: int = None
+    id: int
     name: str
     priority: FeaturePriority
-    tags: str
+    tags: Optional[str]
     creator: str
     create_date: datetime
-    epic: EpicSchemaOut = None
+    epic: EpicSchemaOut
 
 
 class SprintSchemaIn(Schema):
     name: str
-    goal: str
+    goal: Optional[str]
     start: date
     end: date
-    project_id: int = None
+    project_id: int
+
+
+class SprintSchemaInPatch(Schema):
+    name: Optional[str]
+    goal: Optional[str]
+    start: Optional[date]
+    end: Optional[date]
+    project_id: Optional[int]
 
 
 class SprintSchemaOut(Schema):
-    id: int = None
+    id: int
     name: str
-    goal: str
+    goal: Optional[str]
     start: date
     end: date
     creator: str
     create_date: datetime
-    project: ProjectSchemaOut = None
+    project: ProjectSchemaOut
 
 
 class TaskSchemaIn(Schema):
     name: str
     description: str
     task_type: str
-    task_status: Status
-    tags: str
-    estimation: int
-    sprint_order: int
-    assignee: str
-    sprint_id: int
-    feature_id: int
+    task_status: Optional[Status]
+    tags: Optional[str]
+    estimation: Optional[int]
+    sprint_order: Optional[int]
+    assignee: Optional[str]
+    sprint_id: Optional[int]
+    feature_id: Optional[int]
+
+
+class TaskSchemaInPatch(Schema):
+    name: Optional[str]
+    description: Optional[str]
+    task_type: Optional[str]
+    task_status: Optional[Status]
+    tags: Optional[str]
+    estimation: Optional[int]
+    sprint_order: Optional[int]
+    assignee: Optional[str]
+    sprint_id: Optional[int]
+    feature_id: Optional[int]
 
 
 class TaskSchemaOut(Schema):
-    id: int = None
+    id: int
     name: str
     description: str
     task_type: TaskType
-    task_status: Status
-    tags: str
-    estimation: int
-    sprint_order: int
-    assignee: str
+    task_status: Optional[Status]
+    tags: Optional[str]
+    estimation: Optional[int]
+    sprint_order: Optional[int]
+    assignee: Optional[str]
     creator: str
     create_date: datetime
-    sprint: SprintSchemaOut = None
-    feature: FeatureSchemaOut = None
+    sprint: Optional[SprintSchemaOut]
+    feature: Optional[FeatureSchemaOut]
 
 
 class SubTaskSchemaIn(Schema):
     name: str
     description: str
-    task_id: int = None
+    task_id: int
+
+
+class SubTaskSchemaInPatch(Schema):
+    name: Optional[str]
+    description: Optional[str]
+    task_id: Optional[int]
 
 
 class SubTaskSchemaOut(Schema):
-    id: int = None
+    id: int
     name: str
     description: str
     creator: str
     create_date: datetime
-    task: TaskSchemaOut = None
+    task: TaskSchemaOut
 
 
 class CommentSchemaIn(Schema):
     content: str
-    task_id: int = None
+    task_id: int
+
+
+class CommentSchemaInPatch(Schema):
+    content: Optional[str]
+    task_id: Optional[int]
 
 
 class CommentSchemaOut(Schema):
-    id: int = None
+    id: int
     content: str
     creator: str
     create_date: datetime
-    task: TaskSchemaOut = None
+    task: TaskSchemaOut

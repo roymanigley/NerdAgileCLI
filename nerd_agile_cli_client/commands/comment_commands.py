@@ -34,10 +34,10 @@ def show(id: int) -> None:
 
 @comment_commands.command('comment:update')
 @click.option('--id', prompt='Enter the "comment" id', help='The id of the "comment"', type=str)
-@click.option('--content', prompt='Enter the description for the "comment"', help='The description of the "comment"', type=str)
-@click.option('--task_id', prompt='Enter the task_id for the "comment"', help='The task_id of the "comment"', type=int)
+@click.option('--content', help='The description of the "comment"', type=str)
+@click.option('--task_id', help='The task_id of the "comment"', type=int)
 def update(id: int, content: str, task_id: int) -> None:
-    comment = client.update(Comment(content, task_id), id)
+    comment = client.update_partial(Comment(content, task_id), id)
     print_comment(comment)
 
 

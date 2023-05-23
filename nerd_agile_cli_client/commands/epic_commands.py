@@ -13,8 +13,8 @@ def epic_commands() -> None:
 
 @epic_commands.command('epic:new')
 @click.option('--name', prompt='Enter the "epic" name', help='The name of the "epic"', type=str)
-@click.option('--tags', prompt='Enter the tags for the "epic"', help='The tags of the "epic"', type=str)
 @click.option('--project_id', prompt='Enter the project_id for the "epic"', help='The project_id of the "epic"', type=int)
+@click.option('--tags', help='The tags of the "epic"', type=str)
 def new(name: str, tags: str, project_id: int) -> None:
     epic = client.create(Epic(name, tags, project_id))
     print_epic(epic)
@@ -33,11 +33,11 @@ def show(id: int) -> None:
 
 @epic_commands.command('epic:update')
 @click.option('--id', prompt='Enter the "epic" id', help='The id of the "epic"', type=str)
-@click.option('--name', prompt='Enter the "epic" name', help='The name of the "epic"', type=str)
-@click.option('--tags', prompt='Enter the "ags for the "epic"', help='The tags of the "epic"', type=str)
-@click.option('--project_id', prompt='Enter the project_id for the "epic"', help='The project_id of the "epic"', type=int)
+@click.option('--name', help='The name of the "epic"', type=str)
+@click.option('--project_id', help='The project_id of the "epic"', type=int)
+@click.option('--tags', help='The tags of the "epic"', type=str)
 def update(id: int, name: str, tags: str, project_id: int) -> None:
-    epic = client.update(Epic(name, tags, project_id), id)
+    epic = client.update_partial(Epic(name, tags, project_id), id)
     print_epic(epic)
 
 

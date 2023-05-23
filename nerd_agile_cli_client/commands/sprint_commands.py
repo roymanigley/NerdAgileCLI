@@ -15,10 +15,10 @@ def sprint_commands() -> None:
 
 @sprint_commands.command('sprint:new')
 @click.option('--name', prompt='Enter the "sprint" name', help='The name of the "sprint"', type=str)
-@click.option('--goal', prompt='Enter the goal for the "sprint"', help='The goal of the "sprint"', type=str)
 @click.option('--start', prompt='Enter the start date for the "sprint"', help='The start date of the "sprint"', type=click.DateTime(formats=["%Y-%m-%d"]))
 @click.option('--end', prompt='Enter the end date for the "sprint"', help='The end date of the "sprint"', type=click.DateTime(formats=["%Y-%m-%d"]))
 @click.option('--project_id', prompt='Enter the project_id for the "sprint"', help='The project_id of the "sprint"', type=int)
+@click.option('--goal', help='The goal of the "sprint"', type=str)
 def update(name: str, goal: str, start: date, end: date, project_id: int) -> None:
     sprint = client.create(Sprint(name, goal, start, end, project_id))
     print_sprint(sprint)
@@ -37,13 +37,13 @@ def show(id: int) -> None:
 
 @sprint_commands.command('sprint:update')
 @click.option('--id', prompt='Enter the "sprint" id', help='The id of the "sprint"', type=str)
-@click.option('--name', prompt='Enter the "sprint" name', help='The name of the "sprint"', type=str)
-@click.option('--goal', prompt='Enter the goal for the "sprint"', help='The goal of the "sprint"', type=str)
-@click.option('--start', prompt='Enter the start date for the "sprint"', help='The start date of the "sprint"', type=click.DateTime(formats=["%Y-%m-%d"]))
-@click.option('--end', prompt='Enter the end date for the "sprint"', help='The end date of the "sprint"', type=click.DateTime(formats=["%Y-%m-%d"]))
-@click.option('--project_id', prompt='Enter the project_id for the "sprint"', help='The project_id of the "sprint"', type=int)
+@click.option('--name', help='The name of the "sprint"', type=str)
+@click.option('--goal', help='The goal of the "sprint"', type=str)
+@click.option('--start', help='The start date of the "sprint"', type=click.DateTime(formats=["%Y-%m-%d"]))
+@click.option('--end', help='The end date of the "sprint"', type=click.DateTime(formats=["%Y-%m-%d"]))
+@click.option('--project_id', help='The project_id of the "sprint"', type=int)
 def update(id: int, name: str, goal: str, start: date, end: date, project_id: int) -> None:
-    sprint = client.update(Sprint(name, goal, start, end, project_id), id)
+    sprint = client.update_partial(Sprint(name, goal, start, end, project_id), id)
     print_sprint(sprint)
 
 

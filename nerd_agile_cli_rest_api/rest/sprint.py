@@ -6,7 +6,7 @@ from ninja import NinjaAPI
 
 from nerd_agile_cli_rest_api.rest.auth import AuthBearer
 from nerd_agile_cli_rest_api.models import Sprint
-from nerd_agile_cli_rest_api.schemas import SprintSchemaOut, SprintSchemaIn
+from nerd_agile_cli_rest_api.schemas import SprintSchemaOut, SprintSchemaIn, SprintSchemaInPatch
 from nerd_agile_cli_rest_api.rest.helper import apply_autit_create_infos
 
 
@@ -29,8 +29,16 @@ def register(api: NinjaAPI) -> None:
     def update_sprint(request: HttpRequest, id: int, payload: SprintSchemaIn):
         sprint = get_object_or_404(Sprint, id=id)
         for attr, value in payload.dict().items():
-            if attr != "id":
-                setattr(sprint, attr, value)
+            setattr(sprint, attr, value)
+        sprint.save()
+        return sprint
+
+    @api.patch("sprint/{id}", response={200: SprintSchemaOut}, auth=AuthBearer())
+    def update_partial_sprint(request: HttpRequest, id: int, payload: SprintSchemaInPatch):
+        sprint = get_object_or_404(Sprint, id=id)
+        for attr, value in payload.dict().items():
+            if value is not None:
+                setattr(sprint, attr, value if value != 'null' else None)
         sprint.save()
         return sprint
 

@@ -7,7 +7,7 @@ from ninja import NinjaAPI
 from nerd_agile_cli_rest_api.rest.auth import AuthBearer
 from nerd_agile_cli_rest_api.models import SubTask
 from nerd_agile_cli_rest_api.rest.helper import apply_autit_create_infos
-from nerd_agile_cli_rest_api.schemas import SubTaskSchemaIn, SubTaskSchemaOut
+from nerd_agile_cli_rest_api.schemas import SubTaskSchemaIn, SubTaskSchemaOut, SubTaskSchemaInPatch
 
 
 def register(api: NinjaAPI) -> None:
@@ -30,8 +30,16 @@ def register(api: NinjaAPI) -> None:
     def update_sub_task(request: HttpRequest, id: int, payload: SubTaskSchemaIn):
         sub_task = get_object_or_404(SubTask, id=id)
         for attr, value in payload.dict().items():
-            if attr != "id":
-                setattr(sub_task, attr, value)
+            setattr(sub_task, attr, value)
+        sub_task.save()
+        return sub_task
+
+    @api.patch("sub_task/{id}", response={200: SubTaskSchemaOut}, auth=AuthBearer())
+    def update_sub_partial_task(request: HttpRequest, id: int, payload: SubTaskSchemaInPatch):
+        sub_task = get_object_or_404(SubTask, id=id)
+        for attr, value in payload.dict().items():
+            if value is not None:
+                setattr(sub_task, attr, value if value != 'null' else None)
         sub_task.save()
         return sub_task
 

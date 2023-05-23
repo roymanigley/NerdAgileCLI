@@ -31,9 +31,9 @@ def show(id: int) -> None:
 
 @project_commands.command('project:update')
 @click.option('--id', prompt='Enter the id of the "project" to update', help='The id of the "project"', type=int)
-@click.option('--name', prompt='Enter the "project" name', help='The name of the "project"', type=str)
+@click.option('--name', help='The name of the "project"', type=str)
 def update(id: int, name: str) -> None:
-    project = client.update(Project(name), id)
+    project = client.update_partial(Project(name), id)
     print_project(project)
 
 

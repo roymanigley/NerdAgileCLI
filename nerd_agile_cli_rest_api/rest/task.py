@@ -5,9 +5,9 @@ from django.shortcuts import get_object_or_404
 from ninja import NinjaAPI
 
 from nerd_agile_cli_rest_api.rest.auth import AuthBearer
-from nerd_agile_cli_rest_api.models import Task
+from nerd_agile_cli_rest_api.models import Task, Status
 from nerd_agile_cli_rest_api.rest.helper import apply_autit_create_infos
-from nerd_agile_cli_rest_api.schemas import TaskSchemaOut, TaskSchemaIn
+from nerd_agile_cli_rest_api.schemas import TaskSchemaOut, TaskSchemaIn, TaskSchemaInPatch
 
 
 def register(api: NinjaAPI) -> None:
@@ -22,6 +22,7 @@ def register(api: NinjaAPI) -> None:
 
     @api.post("task", response={201: TaskSchemaOut}, auth=AuthBearer())
     def create_task(request: HttpRequest, payload: TaskSchemaIn):
+        payload.task_status = payload.task_status if payload.task_status else Status.IN_PLANNING
         payload_dict = apply_autit_create_infos(payload, request)
         task = Task.objects.create(**payload_dict)
         return task
@@ -30,8 +31,16 @@ def register(api: NinjaAPI) -> None:
     def update_task(request: HttpRequest, id: int, payload: TaskSchemaIn):
         task = get_object_or_404(Task, id=id)
         for attr, value in payload.dict().items():
-            if attr != "id":
-                setattr(task, attr, value)
+            setattr(task, attr, value)
+        task.save()
+        return task
+
+    @api.patch("task/{id}", response={200: TaskSchemaOut}, auth=AuthBearer())
+    def update_partial_task(request: HttpRequest, id: int, payload: TaskSchemaInPatch):
+        task = get_object_or_404(Task, id=id)
+        for attr, value in payload.dict().items():
+            if value is not None:
+                setattr(task, attr, value if value != 'null' else None)
         task.save()
         return task
 

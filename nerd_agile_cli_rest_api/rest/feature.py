@@ -7,7 +7,7 @@ from ninja import NinjaAPI
 from nerd_agile_cli_rest_api.rest.auth import AuthBearer
 from nerd_agile_cli_rest_api.models import Feature
 from nerd_agile_cli_rest_api.rest.helper import apply_autit_create_infos
-from nerd_agile_cli_rest_api.schemas import FeatureSchemaIn, FeatureSchemaOut
+from nerd_agile_cli_rest_api.schemas import FeatureSchemaIn, FeatureSchemaOut, FeatureSchemaInPatch
 
 
 def register(api: NinjaAPI) -> None:
@@ -30,8 +30,16 @@ def register(api: NinjaAPI) -> None:
     def update_feature(request: HttpRequest, id: int, payload: FeatureSchemaIn):
         feature = get_object_or_404(Feature, id=id)
         for attr, value in payload.dict().items():
-            if attr != "id":
-                setattr(feature, attr, value)
+            setattr(feature, attr, value)
+        feature.save()
+        return feature
+
+    @api.patch("feature/{id}", response={200: FeatureSchemaOut}, auth=AuthBearer())
+    def update_partial_feature(request: HttpRequest, id: int, payload: FeatureSchemaInPatch):
+        feature = get_object_or_404(Feature, id=id)
+        for attr, value in payload.dict().items():
+            if value is not None:
+                setattr(feature, attr, value if value != 'null' else None)
         feature.save()
         return feature
 
