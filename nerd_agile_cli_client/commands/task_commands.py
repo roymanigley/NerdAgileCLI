@@ -5,7 +5,7 @@ import click
 from client.TaskClient import client
 from model import Task, TaskType, Status, ClassMapper
 
-from printer import print_task
+from printer import print_task, print_tasks
 
 
 @click.group()
@@ -36,7 +36,7 @@ def new(name: str, type: TaskType, status: Status, tags: str,
 def show(id: int) -> None:
     if (id is None):
         tasks = client.find_all()
-        [print_task(p) for p in tasks]
+        print_tasks(tasks)
     else:
         task = client.find_one(id)
         print_task(task)

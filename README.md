@@ -10,7 +10,7 @@
 - [x] when invoking `sprint:show --id 1` display a Kanban board 
 - [x] add error handling to show a nice output to the user
 - [ ] stype the output from the client
-  - [ ] find all in tables
+  - [x] find all in tables
   - [ ] single records in a nicer fashion
 
 ### API

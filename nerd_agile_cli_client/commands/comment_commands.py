@@ -5,7 +5,7 @@ import click
 from client.CommentClient import client
 from model import Comment, Status, ClassMapper
 
-from printer import print_comment
+from printer import print_comment, print_comments
 
 
 @click.group()
@@ -26,7 +26,7 @@ def create(task_id: int) -> None:
 def show(id: int) -> None:
     if (id is None):
         comments = client.find_all()
-        [print_comment(p) for p in comments]
+        print_comments(comments)
     else:
         comment = client.find_one(id)
         print_comment(comment)

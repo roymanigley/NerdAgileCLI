@@ -3,7 +3,7 @@ import click
 from client.EpicClient import client
 from model import Epic, ClassMapper
 
-from printer import print_epic
+from printer import print_epic, print_epics
 
 
 @click.group()
@@ -25,7 +25,7 @@ def new(name: str, tags: str, project_id: int) -> None:
 def show(id: int) -> None:
     if (id is None):
         epics = client.find_all()
-        [print_epic(p) for p in epics]
+        print_epics(epics)
     else:
         epic = client.find_one(id)
         print_epic(epic)

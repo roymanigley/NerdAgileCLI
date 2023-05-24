@@ -3,7 +3,7 @@ import click
 from client.FeatureClient import client
 from model import Feature, FeaturePriority, ClassMapper
 
-from printer import print_feature
+from printer import print_feature, print_features
 
 
 @click.group()
@@ -26,7 +26,7 @@ def new(name: str, tags: str, priority: str, epic_id: int) -> None:
 def show(id: int) -> None:
     if (id is None):
         features = client.find_all()
-        [print_feature(p) for p in features]
+        print_features(features)
     else:
         feature = client.find_one(id)
         print_feature(feature)

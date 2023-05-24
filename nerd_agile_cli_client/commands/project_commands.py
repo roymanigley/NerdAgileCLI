@@ -3,7 +3,7 @@ import click
 from client.ProjectClient import client
 from model import Project, ClassMapper
 
-from printer import print_project
+from printer import print_project, print_projects
 
 
 @click.group()
@@ -23,7 +23,7 @@ def new(name: str) -> None:
 def show(id: int) -> None:
     if (id is None):
         projects = client.find_all()
-        [print_project(p) for p in projects]
+        print_projects(projects)
     else:
         project = client.find_one(id)
         print_project(project)

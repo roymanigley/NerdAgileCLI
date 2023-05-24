@@ -5,7 +5,7 @@ import click
 from client.SubTaskClient import client
 from model import SubTask, Status, ClassMapper
 
-from printer import print_sub_task
+from printer import print_sub_task, print_sub_tasks
 
 
 @click.group()
@@ -27,7 +27,7 @@ def new(name: str, task_id: int) -> None:
 def show(id: int) -> None:
     if (id is None):
         sub_tasks = client.find_all()
-        [print_sub_task(p) for p in sub_tasks]
+        print_sub_tasks(sub_tasks)
     else:
         sub_task = client.find_one(id)
         print_sub_task(sub_task)
