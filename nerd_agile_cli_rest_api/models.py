@@ -40,7 +40,7 @@ class Epic(models.Model):
 
 class Feature(models.Model):
     name = models.CharField(max_length=255, blank=False)
-    priority = models.CharField(blank=False, choices=FeaturePriority.choices)
+    priority = models.CharField(blank=False, max_length=100, choices=FeaturePriority.choices)
     creator = models.CharField(max_length=255, blank=False)
     create_date = models.DateTimeField(blank=False)
     tags = models.CharField(max_length=1024, blank=False, null=True)
@@ -60,8 +60,8 @@ class Sprint(models.Model):
 class Task(models.Model):
     name = models.CharField(max_length=255, blank=False)
     description = models.TextField(blank=False)
-    task_type = models.CharField(blank=False, default=TaskType.choices)
-    task_status = models.CharField(blank=False, default=Status.IN_PLANNING, choices=Status.choices)
+    task_type = models.CharField(blank=False,max_length=100,  default=TaskType.choices)
+    task_status = models.CharField(blank=False, max_length=100, default=Status.IN_PLANNING, choices=Status.choices)
     tags = models.CharField(max_length=1024, blank=False, null=True)
     estimation = models.IntegerField(null=True)
     sprint_order = models.IntegerField(null=True)

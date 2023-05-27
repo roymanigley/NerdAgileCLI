@@ -1,0 +1,80 @@
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <!--Import Google Icon Font-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+    <style>
+        pre {
+            background-color: #009688;
+            color: white;
+            padding: 0.3em;
+            border-radius: 10px;
+        }
+
+        .toast {
+            border-radius: 10px;
+        }
+
+        .container {
+            margin-top: 3em;
+            font-size: 1.5em
+        }
+
+        .brand-logo {
+            margin-left: 1em;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+      <div class="nav-wrapper teal">
+        <a href="#" class="brand-logo">NerdAgileCLI API</a>
+        <ul id="nav-mobile" class="right hide-on-med-and-down">
+          <li><a href="/admin"><i class="material-icons left">admin_panel_settings</i> Admin panel</a></li>
+          <li><a href="/api/docs"><i class="material-icons left">history_edu</i> API docs</a></li>
+          <li><a href="https://github.com/roymanigley/NerdAgileCLI" target="_blank"><i class="material-icons left">share</i> GitHub</a></li>
+        </ul>
+      </div>
+    </nav>
+    <div class="container">
+        <h4>
+        NerdAgileCLI is a Scrum project management tool
+        <br><br>
+        The project contains a backend (REST API) and a CLI client
+        </h4>
+        <br>
+        checkout the repo
+        <pre id="snippet-clone" onclick="copyToClipBoard('snippet-clone')">git clone https://github.com/roymanigley/NerdAgileCLI</pre>
+        install the dependencies the dependencies
+        <br>
+        <pre id="snippet-build" onclick="copyToClipBoard('snippet-build')">cd NerdAgileCLI
+
+python3 -m venv .env
+source .env/bin/activate
+pip install -r requirements.txt</pre>
+
+        then run the <code>nerd_agile_cli_client</code>
+        <pre id="snippet-run" onclick="copyToClipBoard('snippet-run')">export API_BASE_URL=https://nerd-agile-cli.onrender.com
+export API_USERNAME="YOUR_USERNAME"
+export API_PASSWORD="YOUR_PASSWORD"
+
+python nerd_agile_cli_client/main.py</pre>
+    </div>
+<script>
+    function copyToClipBoard(id) {
+        const content = document.getElementById(id).innerText
+        navigator.clipboard.writeText(content);
+
+        M.toast({html: 'copied to clop board'})
+    }
+</script>
+</body>
+</html>

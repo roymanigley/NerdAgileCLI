@@ -17,6 +17,7 @@ from Crypto.PublicKey import RSA
 
 rsa_private_key_path = os.environ.get('RSA_PRIVATE_KEY') or 'rsa_private.pem'
 rsa_public_key_path = os.environ.get('RSA_PUBLIC_KEY') or 'rsa_public.pem'
+PROD = os.getenv("APP_PROD_ENV") is not None and os.getenv("APP_PROD_ENV").upper() == 'TRUE'
 
 if not os.path.exists(rsa_private_key_path) or not os.path.exists(rsa_public_key_path):
     print('[+] generating RSA keys')
@@ -26,10 +27,9 @@ if not os.path.exists(rsa_private_key_path) or not os.path.exists(rsa_public_key
     with open(rsa_public_key_path, 'w') as f:
         f.write(keys.publickey().exportKey('PEM', pkcs=1).decode('utf-8'))
 
-PROD = os.getenv("APP_PROD_ENV") is not None and os.getenv("APP_PROD_ENV").upper() == 'TRUE'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = not PROD or (os.getenv("APP_DEBUG") is not None and os.getenv("APP_DEBUG").upper() == 'TRUE')
-
+DEBUG = False
 if not PROD:
     with os.popen('docker ps | grep docker_nerd_agile_cli_db') as p:
         if (p.read() == ''):
@@ -41,7 +41,8 @@ if not PROD:
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
+TEMPLATES_ROOT = os.path.join(BASE_DIR, "frontend/templates")
+STATIC_ROOT = os.path.join(BASE_DIR, "frontend/static")
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -50,12 +51,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-3)+bd8z*zx+yf0e^ii$!zcl5d23l5e+-ww$cnnvxhvx-%g8v_x' if not PROD else os.getenv("DJANGO_SECRET_KEY")
 
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    'whitenoise.runserver_nostatic',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -67,6 +69,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -80,7 +83,7 @@ ROOT_URLCONF = 'nerd_agile_cli_project.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [TEMPLATES_ROOT],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

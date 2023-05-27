@@ -21,7 +21,7 @@ with open(rsa_public_key_path) as f:
 
 
 class AuthBearer(HttpBearer):
-    def authenticate(self, request, token: str) -> str | None:
+    def authenticate(self, request, token: str) -> str or None:
         if verify_token(token):
             return token
         else:
